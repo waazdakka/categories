@@ -742,19 +742,19 @@
   }
 }
 
-
 @keyframes fof-category-glow {
-  0%   { filter: drop-shadow(0 0 3px var(--control-danger-color)); }
-  50%  { filter: drop-shadow(0 0 7px var(--control-danger-color)); }
-  100% { filter: drop-shadow(0 0 3px var(--control-danger-color)); }
+  0%   { filter: drop-shadow(0 0 3px #e8a234); }
+  50%  { filter: drop-shadow(0 0 8px #e8a234); }
+  100% { filter: drop-shadow(0 0 3px #e8a234); }
 }
 
-.TagCategory.hasUnread > a > .TagCategory-alignStart .CategoryIcon {
+.TagCategory.hasUnread > a > .TagCategory-alignStart .TagCategory-icon .fa-stack {
   animation: fof-category-glow 2s ease-in-out infinite;
 }
 
 .TagCategory.hasUnread > a > .TagCategory-alignStart .TagCategory-name {
-  color: var(--control-danger-color, #e74c3c);
+  color: #e8a234;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .TagCategory.hasUnread > a .LastDiscussion-topRow,
