@@ -1,5 +1,6 @@
 import { extend } from 'flarum/common/extend';
 import BasicsPage from 'flarum/admin/components/BasicsPage';
+import ColorPreviewInput from 'flarum/admin/components/ColorPreviewInput';
 
 app.initializers.add('fof-categories', () => {
   app.extensionData
@@ -61,13 +62,17 @@ app.initializers.add('fof-categories', () => {
       type: 'switch',
     })
 
-    .registerSetting(() => <legend class="categories-legend">{app.translator.trans('fof-categories.admin.headings.unread')}</legend>)
-    .registerSetting({
-      setting: 'fof-categories.unread-color',
-      label: app.translator.trans('fof-categories.admin.labels.unread_color'),
-      type: 'color',
-      default: '#e8a234',
-    });
+    .registerSetting(() => (
+      <div className="Form-group">
+        <label>{app.translator.trans('fof-categories.admin.labels.unread_color')}</label>
+        <ColorPreviewInput
+          value={app.data.settings['fof-categories.unread-color'] || '#e8a234'}
+          onchange={(value) => {
+            app.data.settings['fof-categories.unread-color'] = value;
+          }}
+        />
+      </div>
+    ))
 
   extend(BasicsPage.prototype, 'homePageItems', (items) => {
     items.add('categories', {
