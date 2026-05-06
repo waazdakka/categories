@@ -21,7 +21,6 @@ use Flarum\Post\Event\Restored;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
-use FoF\Categories\Content\Categories;
 
 return [
     (new Extend\Frontend('forum'))
