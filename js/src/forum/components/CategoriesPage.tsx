@@ -12,35 +12,30 @@ import tagLabel from 'flarum/tags/helpers/tagLabel';
 
 import Category from './Category';
 
-export default class CategoriesPage extends Page {
-  tags!: any[];
-  loading!: boolean;
+oninit(vnode) {
+  super.oninit(vnode);
 
-  oninit(vnode) {
-    super.oninit(vnode);
+  app.history.push('categories', extractText(app.translator.trans('fof-categories.forum.header.back_to_categories_tooltip')));
 
-    app.history.push('categories', extractText(app.translator.trans('fof-categories.forum.header.back_to_categories_tooltip')));
+  // Inject unread color CSS variable
+  const unreadColor = app.forum.attribute('categories.unreadColor') || '#e8a234';
+  document.documentElement.style.setProperty('--fof-categories-unread-color', unreadColor);
 
-    this.tags = [];
+  this.tags = [];
 
-    const preloaded = app.preloadedApiDocument<any>();
-
-    if (preloaded) {
-      this.tags = sortTags(preloaded.filter((tag: any) => !tag.isChild()));
-      return;
-    }
-
-    this.loading = true;
-
-    app.tagList.load(['parent', 'children', 'lastPostedDiscussion', 'lastPostedDiscussion.lastPostedUser']).then(() => {
-      this.tags = sortTags(app.store.all('tags').filter((tag) => !tag.isChild()));
-
-      this.loading = false;
-
-      m.redraw();
-    });
+  const preloaded = app.preloadedApiDocument<any>();
+  if (preloaded) {
+    this.tags = sortTags(preloaded.filter((tag: any) => !tag.isChild()));
+    return;
   }
 
+  this.loading = true;
+  app.tagList.load(['parent', 'children', 'lastPostedDiscussion', 'lastPostedDiscussion.lastPostedUser']).then(() => {
+    this.tags = sortTags(app.store.all('tags').filter((tag) => !tag.isChild()));
+    this.loading = false;
+    m.redraw();
+  });
+}
   view() {
     if (this.loading) {
       return <LoadingIndicator />;
