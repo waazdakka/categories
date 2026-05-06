@@ -72,8 +72,8 @@ return [
                		 return false;
             	}
            	 return Discussion::query()
-               		->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
-                	->where('discussion_tag.tag_id', $model->id)
+			->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
+			->where('discussion_tag.tag_id', $model->id)
                 	->whereVisibleTo($actor)
                 	->where(function ($query) use ($actor) {
                 	    $query->whereNotExists(function ($sub) use ($actor) {
