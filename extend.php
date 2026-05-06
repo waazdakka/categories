@@ -90,7 +90,7 @@ return [
         }
         try {
             $state = $model->stateFor($actor);
-            $attributes['lastReadPostNumber'] = (int) $state->last_read_post_number;
+	    $attributes['lastReadPostNumber'] = $state->last_read_post_number === null ? null : (int) $state->last_read_post_number;
         } catch (\Exception $e) {
             $attributes['lastReadPostNumber'] = 0;
         }
