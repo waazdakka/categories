@@ -41,8 +41,8 @@ return [
         ->serializeToForum('categories.parentRemoveDescription', 'fof-categories.parent-remove-description', 'boolval')
         ->serializeToForum('categories.parentRemoveStats', 'fof-categories.parent-remove-stats', 'boolval')
         ->serializeToForum('categories.parentRemoveLastDiscussion', 'fof-categories.parent-remove-last-discussion', 'boolval')
-        ->serializeToForum('categories.childBareIcon', 'fof-categories.child-bare-icon', 'boolval', true),
-	->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234')
+        ->serializeToForum('categories.childBareIcon', 'fof-categories.child-bare-icon', 'boolval', true)
+	->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234'),
 
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
