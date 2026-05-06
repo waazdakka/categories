@@ -22,6 +22,7 @@ use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
 use FoF\Categories\Content\Categories;
 use Flarum\Api\Serializer\DiscussionSerializer;
+use Flarum\Discussion\Discussion;
 
 return [
     (new Extend\Frontend('forum'))
@@ -62,7 +63,27 @@ return [
             }
 
             return $attributes;
+(new Extend\ApiSerializer(TagSerializer::class))
+        ->attribute('hasUnread', function ($serializer, $model) {
+            $actor = $serializer->getActor();
+            if ($actor->isGuest()) {
+                return false;
+            }
+            return Discussion::query()
+                ->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
+                ->where('discussion_tag.tag_id', $model->id)
+                ->whereVisibleTo($actor)
+                ->where(function ($query) use ($actor) {
+                    $query->whereNotExists(function ($sub) use ($actor) {
+                        $sub->from('discussion_user')
+                            ->whereColumn('discussion_user.discussion_id', 'discussions.id')
+                            ->where('discussion_user.user_id', $actor->id)
+                            ->whereRaw('discussion_user.last_read_post_number >= discussions.last_post_number');
+                    });
+                })
+                ->exists();
         }),
+
 
     (new Extend\ApiSerializer(BasicUserSerializer::class))
         ->attribute('joinTime', function ($serializer, $model) {

@@ -63,40 +63,30 @@ export default class Category extends Component<Attrs> {
     });
   }
 
-  view() {
-    const tag = this.tag;
+view() {
+  const tag = this.tag;
 
-    if (!tag) {
-      return null;
-    } else if (this.tagLocked && !this.tagLocked.isVisible) {
-      // Hide the navigation when protected Tag in 'Tag Passwords > Display protected Tag in Tags page navigation' is disabled
-      return null;
-    }
-
-    this.compactMobileMode = !!app.forum.attribute('categories.compactMobile');
-
-    return (
-      <li
-        className={classList('TagCategory', `TagCategory-${tag.slug()}`, {
-          SubCategory: this.isChild,
-          ParentCategory: !this.isChild,
-          compactMobile: this.compactMobileMode,
-        hasUnread: !!(() => {
-          if (!app.session.user) return false;  // guest
-          const d = tag.lastPostedDiscussion();
-          if (!d) return false;
-          const last = d.lastPostNumber();
-          const read = d.lastReadPostNumber();
-          if (!last) return false;
-          if (read === null || read === undefined) return true;
-          return read < last;
-        })(),
-        })}
-      >
-        {this.categoryItems().toArray()}
-      </li>
-    );
+  if (!tag) {
+    return null;
+  } else if (this.tagLocked && !this.tagLocked.isVisible) {
+    return null;
   }
+
+  this.compactMobileMode = !!app.forum.attribute('categories.compactMobile');
+
+  return (
+    <li
+      className={classList('TagCategory', `TagCategory-${tag.slug()}`, {
+        SubCategory: this.isChild,
+        ParentCategory: !this.isChild,
+        compactMobile: this.compactMobileMode,
+        hasUnread: !!(app.session.user && tag.attribute('hasUnread')),
+      })}
+    >
+      {this.categoryItems().toArray()}
+    </li>
+  );
+}
 
   categoryItems() {
     const items = new ItemList();
