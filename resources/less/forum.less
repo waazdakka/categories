@@ -743,8 +743,18 @@
 }
 
 
+@keyframes fof-category-glow {
+  0%   { filter: drop-shadow(0 0 3px var(--control-danger-color)); }
+  50%  { filter: drop-shadow(0 0 7px var(--control-danger-color)); }
+  100% { filter: drop-shadow(0 0 3px var(--control-danger-color)); }
+}
+
+.TagCategory.hasUnread > a > .TagCategory-alignStart .CategoryIcon {
+  animation: fof-category-glow 2s ease-in-out infinite;
+}
+
 .TagCategory.hasUnread > a > .TagCategory-alignStart .TagCategory-name {
-  color: var(--control-danger-color, #e74c3c) !important;
+  color: var(--control-danger-color, #e74c3c);
 }
 
 .TagCategory.hasUnread > a .LastDiscussion-topRow,
