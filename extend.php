@@ -3,15 +3,15 @@
 /*
  * This file is part of fof/categories
  *
- * Copyright (c) 2021 Alexander Skvortsov.
- * Copyright (c) 2026 FriendsOfFlarum.
+ * Copyright (c) FriendsOfFlarum.
  *
- * For detailed copyright and license information, please view the
- * LICENSE file that was distributed with this source code.
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
  */
 
 namespace FoF\Categories;
 
+use FoF\Categories\Content\Categories;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Discussion\Discussion;
 use Flarum\Extend;
@@ -42,7 +42,7 @@ return [
         ->serializeToForum('categories.parentRemoveStats', 'fof-categories.parent-remove-stats', 'boolval')
         ->serializeToForum('categories.parentRemoveLastDiscussion', 'fof-categories.parent-remove-last-discussion', 'boolval')
         ->serializeToForum('categories.childBareIcon', 'fof-categories.child-bare-icon', 'boolval', true)
-	->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234'),
+        ->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234'),
 
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
