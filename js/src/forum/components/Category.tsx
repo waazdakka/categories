@@ -86,9 +86,10 @@ export default class Category extends Component<Attrs> {
 	    if (!d) return false;
 	    const last = d.lastPostNumber();
 	    const read = d.lastReadPostNumber();
-	    return last && read !== undefined && read < last;
+	    if (!last) return false;
+	    if (read === null || read === undefined) return true;
+	   return read < last;
 	  })(),
-
         })}
       >
         {this.categoryItems().toArray()}
