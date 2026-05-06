@@ -86,7 +86,7 @@ hasUnread: !!(() => {
   if (!d) { console.log('no discussion for', tag.slug()); return false; }
   const last = d.lastPostNumber();
   const read = d.lastReadPostNumber();
-  console.log(tag.slug(), 'last:', last, 'read:', read);
+console.log(tag.slug(), 'attributes:', JSON.stringify(d.data?.attributes));
   if (!last) return false;
   if (read === null || read === undefined) return true;
   return read < last;
