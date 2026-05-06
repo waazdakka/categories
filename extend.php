@@ -68,19 +68,21 @@ return [
             if ($actor->isGuest()) {
                 return false;
             }
-            $unreadCount = Discussion::query()
-                ->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
-                ->leftJoin('discussion_user', function ($join) use ($actor) {
-                    $join->on('discussion_user.discussion_id', '=', 'discussions.id')
-                         ->where('discussion_user.user_id', '=', $actor->id);
-                })
-                ->where('discussion_tag.tag_id', $model->id)
-                ->whereVisibleTo($actor)
-                ->where(function ($query) {
-                    $query->whereNull('discussion_user.last_read_post_number')
-                          ->orWhereColumn('discussion_user.last_read_post_number', '<', 'discussions.last_post_number');
-                })
-                ->count();
+		$unreadCount = Discussion::query()
+    ->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
+    ->leftJoin('discussion_user', function ($join) use ($actor) {
+        $join->on('discussion_user.discussion_id', '=', 'discussions.id')
+             ->where('discussion_user.user_id', '=', $actor->id);
+    })
+    ->where('discussion_tag.tag_id', $model->id)
+    ->whereVisibleTo($actor)
+    ->where('discussions.last_post_number', '>', 0)
+    ->whereNotNull('discussions.last_post_number')
+    ->where(function ($query) {
+        $query->whereNull('discussion_user.last_read_post_number')
+              ->orWhereColumn('discussion_user.last_read_post_number', '<', 'discussions.last_post_number');
+    })
+    ->count();
             return $unreadCount > 0;
         }),
 
