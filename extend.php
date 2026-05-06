@@ -88,9 +88,8 @@ return [
         if ($actor->isGuest()) {
             return $attributes;
         }
-        $state = $model->stateFor($actor);
-        $attributes['lastReadPostNumber'] = (int) $state->last_read_post_number;
+        $state = $model->users()->where('user_id', $actor->id)->first();
+        $attributes['lastReadPostNumber'] = $state ? (int) $state->last_read_post_number : 0;
         return $attributes;
     }),
-
 ];
