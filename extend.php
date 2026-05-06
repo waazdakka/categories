@@ -13,6 +13,7 @@
 namespace FoF\Categories;
 
 use Flarum\Api\Serializer\BasicUserSerializer;
+use Flarum\Discussion\Discussion;
 use Flarum\Extend;
 use Flarum\Post\Event\Hidden;
 use Flarum\Post\Event\Posted;
@@ -21,8 +22,6 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
 use FoF\Categories\Content\Categories;
-use Flarum\Api\Serializer\DiscussionSerializer;
-use Flarum\Discussion\Discussion;
 
 return [
     (new Extend\Frontend('forum'))
@@ -58,35 +57,32 @@ return [
                 $attributes['discussionCount'] = (int) $result['discussionCount'];
                 $attributes['postCount'] = (int) $result['postCount'];
             } else {
-                // discussion count is loaded this way by default, no need to reiterate
                 $attributes['postCount'] = (int) $model->post_count;
             }
-
             return $attributes;
-
         }),
-	(new Extend\ApiSerializer(TagSerializer::class))
-        	->attribute('hasUnread', function ($serializer, $model) {
-            	$actor = $serializer->getActor();
-            	if ($actor->isGuest()) {
-               		 return false;
-            	}
-           	 return Discussion::query()
-			->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
-			->where('discussion_tag.tag_id', $model->id)
-                	->whereVisibleTo($actor)
-                	->where(function ($query) use ($actor) {
-                	    $query->whereNotExists(function ($sub) use ($actor) {
-				$sub->from('discussion_user')
-    ->whereColumn('discussion_user.discussion_id', 'discussions.id')
-    ->where('discussion_user.user_id', $actor->id)
-    ->whereColumn('discussion_user.last_read_post_number', '>=', 'discussions.last_post_number');
 
-                	    });
-                	})
-                	->exists();
-        	}),
-
+    (new Extend\ApiSerializer(TagSerializer::class))
+        ->attribute('hasUnread', function ($serializer, $model) {
+            $actor = $serializer->getActor();
+            if ($actor->isGuest()) {
+                return false;
+            }
+            $unreadCount = Discussion::query()
+                ->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
+                ->leftJoin('discussion_user', function ($join) use ($actor) {
+                    $join->on('discussion_user.discussion_id', '=', 'discussions.id')
+                         ->where('discussion_user.user_id', '=', $actor->id);
+                })
+                ->where('discussion_tag.tag_id', $model->id)
+                ->whereVisibleTo($actor)
+                ->where(function ($query) {
+                    $query->whereNull('discussion_user.last_read_post_number')
+                          ->orWhereColumn('discussion_user.last_read_post_number', '<', 'discussions.last_post_number');
+                })
+                ->count();
+            return $unreadCount > 0;
+        }),
 
     (new Extend\ApiSerializer(BasicUserSerializer::class))
         ->attribute('joinTime', function ($serializer, $model) {
@@ -105,19 +101,4 @@ return [
         ->listen(Restored::class, function (Restored $event) {
             Util::updateTagsPostCount($event->post, 1);
         }),
-
-(new Extend\ApiSerializer(DiscussionSerializer::class))
-    ->attributes(function ($serializer, $model, $attributes) {
-        $actor = $serializer->getActor();
-        if ($actor->isGuest()) {
-            return $attributes;
-        }
-        try {
-            $state = $model->stateFor($actor);
-	    $attributes['lastReadPostNumber'] = $state->last_read_post_number === null ? null : (int) $state->last_read_post_number;
-        } catch (\Exception $e) {
-            $attributes['lastReadPostNumber'] = 0;
-        }
-        return $attributes;
-    }),
 ];
