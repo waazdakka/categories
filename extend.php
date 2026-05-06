@@ -21,6 +21,7 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
 use FoF\Categories\Content\Categories;
+use Flarum\Api\Serializer\DiscussionSerializer;
 
 return [
     (new Extend\Frontend('forum'))
@@ -80,4 +81,16 @@ return [
         ->listen(Restored::class, function (Restored $event) {
             Util::updateTagsPostCount($event->post, 1);
         }),
+
+(new Extend\ApiSerializer(DiscussionSerializer::class))
+    ->attributes(function ($serializer, $model, $attributes) {
+        $actor = $serializer->getActor();
+        if ($actor->isGuest()) {
+            return $attributes;
+        }
+        $state = $model->stateFor($actor);
+        $attributes['lastReadPostNumber'] = (int) $state->last_read_post_number;
+        return $attributes;
+    }),
+
 ];
