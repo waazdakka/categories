@@ -77,10 +77,11 @@ return [
                 	->whereVisibleTo($actor)
                 	->where(function ($query) use ($actor) {
                 	    $query->whereNotExists(function ($sub) use ($actor) {
-                	        $sub->from('discussion_user')
-                	            ->whereColumn('discussion_user.discussion_id', 'discussions.id')
-                	            ->where('discussion_user.user_id', $actor->id)
-                	            ->whereRaw('discussion_user.last_read_post_number >= discussions.last_post_number');
+				$sub->from('discussion_user')
+    ->whereColumn('discussion_user.discussion_id', 'discussions.id')
+    ->where('discussion_user.user_id', $actor->id)
+    ->whereColumn('discussion_user.last_read_post_number', '>=', 'discussions.last_post_number');
+
                 	    });
                 	})
                 	->exists();
