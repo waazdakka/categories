@@ -59,7 +59,7 @@ app.initializers.add('fof-categories', () => {
       label: app.translator.trans('fof-categories.admin.labels.small_forum_optimized'),
       help: app.translator.trans('fof-categories.admin.help.small_forum_optimized'),
       type: 'switch',
-    });
+    })
 
     .registerSetting(() => <legend class="categories-legend">{app.translator.trans('fof-categories.admin.headings.unread')}</legend>)
     .registerSetting({
@@ -67,7 +67,7 @@ app.initializers.add('fof-categories', () => {
       label: app.translator.trans('fof-categories.admin.labels.unread_color'),
       type: 'color',
       default: '#e8a234',
-    })
+    });
 
   extend(BasicsPage.prototype, 'homePageItems', (items) => {
     items.add('categories', {
