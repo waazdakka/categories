@@ -67,9 +67,9 @@ app.initializers.add('fof-categories', () => {
         <label>{app.translator.trans('fof-categories.admin.labels.unread_color')}</label>
         <ColorPreviewInput
           value={app.data.settings['fof-categories.unread-color'] || '#e8a234'}
-          onchange={(value) => {
-            app.data.settings['fof-categories.unread-color'] = value;
-          }}
+	    onchange={(e) => {
+	      app.data.settings['fof-categories.unread-color'] = e.target.value;
+	    }}
         />
       </div>
     ))
