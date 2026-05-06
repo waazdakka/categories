@@ -81,6 +81,7 @@ export default class Category extends Component<Attrs> {
           SubCategory: this.isChild,
           ParentCategory: !this.isChild,
           compactMobile: this.compactMobileMode,
+	  hasUnread: !!(tag.lastPostedDiscussion()?.isUnread()),
         })}
       >
         {this.categoryItems().toArray()}
