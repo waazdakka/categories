@@ -74,15 +74,20 @@ view() {
 
   this.compactMobileMode = !!app.forum.attribute('categories.compactMobile');
 
+  const unreadEnabled = app.forum.attribute('categories.unreadEnabled') !== false;
+  const unreadTitleColor = app.forum.attribute('categories.unreadTitleColor') !== false;
+  const unreadIconGlow = app.forum.attribute('categories.unreadIconGlow') !== false;
+  const tagHasUnread = !!(app.session.user && tag.attribute('hasUnread'));
+
   return (
     <li
       className={classList('TagCategory', `TagCategory-${tag.slug()}`, {
         SubCategory: this.isChild,
         ParentCategory: !this.isChild,
         compactMobile: this.compactMobileMode,
-        hasUnread: !!(app.session.user && app.forum.attribute('categories.unreadEnabled') && tag.attribute('hasUnread')),
-        'hasUnread-titleColor': !!(app.session.user && app.forum.attribute('categories.unreadEnabled') && app.forum.attribute('categories.unreadTitleColor') && tag.attribute('hasUnread')),
-        'hasUnread-iconGlow': !!(app.session.user && app.forum.attribute('categories.unreadEnabled') && app.forum.attribute('categories.unreadIconGlow') && tag.attribute('hasUnread')),        
+        hasUnread: tagHasUnread && unreadEnabled,
+        'hasUnread-titleColor': tagHasUnread && unreadEnabled && unreadTitleColor,
+        'hasUnread-iconGlow': tagHasUnread && unreadEnabled && unreadIconGlow,
       })}
     >
       {this.categoryItems().toArray()}

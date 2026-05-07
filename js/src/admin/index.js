@@ -77,36 +77,12 @@ app.initializers.add('fof-categories', () => {
       label: app.translator.trans('fof-categories.admin.labels.unread_icon_glow'),
       type: 'switch',
     })
-    .registerSetting(() => {
-      const setting = 'fof-categories.unread-color';
-      return (
-        <div className="Form-group">
-          <label>{app.translator.trans('fof-categories.admin.labels.unread_color')}</label>
-          <div className="ColorInput">
-            <input
-              className="FormControl"
-              placeholder="#e8a234"
-              type="text"
-              value={app.data.settings[setting] || '#e8a234'}
-              oninput={(e) => {
-                app.data.settings[setting] = e.target.value;
-                m.redraw();
-              }}
-            />
-            <input
-              className="ColorInput-preview"
-              type="color"
-              value={app.data.settings[setting] || '#e8a234'}
-              oninput={(e) => {
-                app.data.settings[setting] = e.target.value;
-                m.redraw();
-              }}
-            />
-          </div>
-        </div>
-      );
+    .registerSetting({
+      setting: 'fof-categories.unread-color',
+      label: app.translator.trans('fof-categories.admin.labels.unread_color'),
+      type: 'color',
+      default: '#e8a234',
     })
-
   extend(BasicsPage.prototype, 'homePageItems', (items) => {
     items.add('categories', {
       path: '/categories',
