@@ -63,9 +63,48 @@ app.initializers.add('fof-categories', () => {
 
     .registerSetting(() => <legend class="categories-legend">{app.translator.trans('fof-categories.admin.headings.unread')}</legend>)
     .registerSetting({
-      setting: 'fof-categories.unread-color',
-      label: app.translator.trans('fof-categories.admin.labels.unread_color'),
-      type: 'color',
+      setting: 'fof-categories.unread-enabled',
+      label: app.translator.trans('fof-categories.admin.labels.unread_enabled'),
+      type: 'switch',
+    })
+    .registerSetting({
+      setting: 'fof-categories.unread-title-color',
+      label: app.translator.trans('fof-categories.admin.labels.unread_title_color'),
+      type: 'switch',
+    })
+    .registerSetting({
+      setting: 'fof-categories.unread-icon-glow',
+      label: app.translator.trans('fof-categories.admin.labels.unread_icon_glow'),
+      type: 'switch',
+    })
+    .registerSetting(() => {
+      const setting = 'fof-categories.unread-color';
+      return (
+        <div className="Form-group">
+          <label>{app.translator.trans('fof-categories.admin.labels.unread_color')}</label>
+          <div className="ColorInput">
+            <input
+              className="FormControl"
+              placeholder="#e8a234"
+              type="text"
+              value={app.data.settings[setting] || '#e8a234'}
+              oninput={(e) => {
+                app.data.settings[setting] = e.target.value;
+                m.redraw();
+              }}
+            />
+            <input
+              className="ColorInput-preview"
+              type="color"
+              value={app.data.settings[setting] || '#e8a234'}
+              oninput={(e) => {
+                app.data.settings[setting] = e.target.value;
+                m.redraw();
+              }}
+            />
+          </div>
+        </div>
+      );
     })
 
   extend(BasicsPage.prototype, 'homePageItems', (items) => {

@@ -80,7 +80,9 @@ view() {
         SubCategory: this.isChild,
         ParentCategory: !this.isChild,
         compactMobile: this.compactMobileMode,
-        hasUnread: !!(app.session.user && tag.attribute('hasUnread')),
+        hasUnread: !!(app.session.user && app.forum.attribute('categories.unreadEnabled') && tag.attribute('hasUnread')),
+        'hasUnread-titleColor': !!(app.session.user && app.forum.attribute('categories.unreadEnabled') && app.forum.attribute('categories.unreadTitleColor') && tag.attribute('hasUnread')),
+        'hasUnread-iconGlow': !!(app.session.user && app.forum.attribute('categories.unreadEnabled') && app.forum.attribute('categories.unreadIconGlow') && tag.attribute('hasUnread')),        
       })}
     >
       {this.categoryItems().toArray()}
