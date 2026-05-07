@@ -81,7 +81,8 @@ app.initializers.add('fof-categories', () => {
       setting: 'fof-categories.unread-color',
       label: app.translator.trans('fof-categories.admin.labels.unread_color'),
       type: 'color',
-    })
+    });
+
   extend(BasicsPage.prototype, 'homePageItems', (items) => {
     items.add('categories', {
       path: '/categories',
