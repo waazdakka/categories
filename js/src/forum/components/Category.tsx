@@ -74,9 +74,9 @@ view() {
 
   this.compactMobileMode = !!app.forum.attribute('categories.compactMobile');
 
-  const unreadEnabled = app.forum.attribute('categories.unreadEnabled') !== false;
-  const unreadTitleColor = app.forum.attribute('categories.unreadTitleColor') !== false;
-  const unreadIconGlow = app.forum.attribute('categories.unreadIconGlow') !== false;
+  const unreadEnabled = app.forum.attribute('categories.unreadEnabled') !== '0';
+  const unreadTitleColor = app.forum.attribute('categories.unreadTitleColor') !== '0';
+  const unreadIconGlow = app.forum.attribute('categories.unreadIconGlow') !== '0';
   const tagHasUnread = !!(app.session.user && tag.attribute('hasUnread'));
 
   return (
