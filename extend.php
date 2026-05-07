@@ -43,8 +43,8 @@ return [
         ->serializeToForum('categories.childBareIcon', 'fof-categories.child-bare-icon', 'boolval', true)
         ->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234')
         ->serializeToForum('categories.unreadEnabled', 'fof-categories.unread-enabled', 'boolval', true)
-        ->serializeToForum('categories.unreadTitleColor', 'fof-categories.unread-title-color', 'boolval', true),
-        ->serializeToForum('categories.unreadIconGlow', 'fof-categories.unread-icon-glow', 'boolval', true)
+        ->serializeToForum('categories.unreadTitleColor', 'fof-categories.unread-title-color', 'boolval', true)
+        ->serializeToForum('categories.unreadIconGlow', 'fof-categories.unread-icon-glow', 'boolval', true),
 
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
