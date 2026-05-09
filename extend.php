@@ -35,10 +35,10 @@ return [
         ->serializeToForum('categories.parentRemoveStats', 'fof-categories.parent-remove-stats', 'boolval')
         ->serializeToForum('categories.parentRemoveLastDiscussion', 'fof-categories.parent-remove-last-discussion', 'boolval')
         ->serializeToForum('categories.childBareIcon', 'fof-categories.child-bare-icon', 'boolval', true)
-	->serializeToForum('categories.unreadEnabled', 'fof-categories.unread-enabled', 'boolval')
-	->serializeToForum('categories.unreadIconGlow', 'fof-categories.unread-icon-glow', 'boolval')
-	->serializeToForum('categories.unreadTitleColor', 'fof-categories.unread-title-color', 'boolval')
-	->serializeToForum('categories.unreadDot', 'fof-categories.unread-dot', 'boolval')
+	->serializeToForum('categories.unreadEnabled', 'fof-categories.unread-enabled', function($value) { return (bool)(int)$value; })
+	->serializeToForum('categories.unreadIconGlow', 'fof-categories.unread-icon-glow', function($value) { return (bool)(int)$value; })
+	->serializeToForum('categories.unreadTitleColor', 'fof-categories.unread-title-color', function($value) { return (bool)(int)$value; })
+	->serializeToForum('categories.unreadDot', 'fof-categories.unread-dot', function($value) { return (bool)(int)$value; })
 	->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234'),
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
