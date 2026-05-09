@@ -73,8 +73,8 @@ export default class Category extends Component<Attrs> {
     }
 
     this.compactMobileMode = !!app.forum.attribute('categories.compactMobile');
-
-    const unreadEnabled = app.forum.attribute('categories.unreadEnabled') === '1';
+    
+    const unreadEnabled = !!app.forum.attribute('categories.unreadEnabled');
     const tagHasUnread = !!(app.session.user && unreadEnabled && tag.attribute('hasUnread'));
 
     return (
@@ -83,9 +83,9 @@ export default class Category extends Component<Attrs> {
           SubCategory: this.isChild,
           ParentCategory: !this.isChild,
           compactMobile: this.compactMobileMode,
-          'hasUnread-iconGlow': tagHasUnread && app.forum.attribute('categories.unreadIconGlow') === '1',
-          'hasUnread-titleColor': tagHasUnread && app.forum.attribute('categories.unreadTitleColor') === '1',
-          'hasUnread-dot': tagHasUnread && app.forum.attribute('categories.unreadDot') === '1',
+          'hasUnread-iconGlow': tagHasUnread && !!app.forum.attribute('categories.unreadIconGlow'),
+          'hasUnread-titleColor': tagHasUnread && !!app.forum.attribute('categories.unreadTitleColor'),
+          'hasUnread-dot': tagHasUnread && !!app.forum.attribute('categories.unreadDot'),
         })}
       >
         {this.categoryItems().toArray()}
