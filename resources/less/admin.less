@@ -5,3 +5,9 @@
 .categories-label {
     font-weight: normal;
 }
+
+.ExtensionPage-settings {
+  .Form-group:has(input[name="settings[fof-categories.unread-enabled]"]:not(:checked)) ~ .Form-group:nth-child(n+2) {
+    display: none;
+  }
+}
