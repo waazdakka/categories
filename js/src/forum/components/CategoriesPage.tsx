@@ -21,22 +21,22 @@ export default class CategoriesPage extends Page {
 
     app.history.push('categories', extractText(app.translator.trans('fof-categories.forum.header.back_to_categories_tooltip')));
 
+    // Inject unread indicator color as CSS variable
+    const unreadColor = app.forum.attribute('categories.unreadColor') || '#e8a234';
+    document.documentElement.style.setProperty('--fof-categories-unread-color', unreadColor);
+
     this.tags = [];
 
     const preloaded = app.preloadedApiDocument<any>();
-
     if (preloaded) {
       this.tags = sortTags(preloaded.filter((tag: any) => !tag.isChild()));
       return;
     }
 
     this.loading = true;
-
     app.tagList.load(['parent', 'children', 'lastPostedDiscussion', 'lastPostedDiscussion.lastPostedUser']).then(() => {
       this.tags = sortTags(app.store.all('tags').filter((tag) => !tag.isChild()));
-
       this.loading = false;
-
       m.redraw();
     });
   }

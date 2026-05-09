@@ -69,11 +69,13 @@ export default class Category extends Component<Attrs> {
     if (!tag) {
       return null;
     } else if (this.tagLocked && !this.tagLocked.isVisible) {
-      // Hide the navigation when protected Tag in 'Tag Passwords > Display protected Tag in Tags page navigation' is disabled
       return null;
     }
 
     this.compactMobileMode = !!app.forum.attribute('categories.compactMobile');
+
+    const unreadEnabled = app.forum.attribute('categories.unreadEnabled') === '1';
+    const tagHasUnread = !!(app.session.user && unreadEnabled && tag.attribute('hasUnread'));
 
     return (
       <li
@@ -81,13 +83,15 @@ export default class Category extends Component<Attrs> {
           SubCategory: this.isChild,
           ParentCategory: !this.isChild,
           compactMobile: this.compactMobileMode,
+          'hasUnread-iconGlow': tagHasUnread && app.forum.attribute('categories.unreadIconGlow') === '1',
+          'hasUnread-titleColor': tagHasUnread && app.forum.attribute('categories.unreadTitleColor') === '1',
+          'hasUnread-dot': tagHasUnread && app.forum.attribute('categories.unreadDot') === '1',
         })}
       >
         {this.categoryItems().toArray()}
       </li>
     );
   }
-
   categoryItems() {
     const items = new ItemList();
     const tag = this.tag;

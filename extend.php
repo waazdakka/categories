@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of fof/categories
  *
@@ -8,11 +7,10 @@
  *  For detailed copyright and license information, please view the
  *  LICENSE file that was distributed with this source code.
  */
-
 namespace FoF\Categories;
-
 use FoF\Categories\Content\Categories;
 use Flarum\Api\Serializer\BasicUserSerializer;
+use Flarum\Discussion\Discussion;
 use Flarum\Extend;
 use Flarum\Post\Event\Hidden;
 use Flarum\Post\Event\Posted;
@@ -20,17 +18,14 @@ use Flarum\Post\Event\Restored;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
-
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less')
         ->route('/categories', 'categories', Categories::class),
-
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/resources/less/admin.less'),
-
     (new Extend\Settings())
         ->serializeToForum('categories.keepTagsNav', 'fof-categories.keep-tags-nav', 'boolval')
         ->serializeToForum('categories.fullPageDesktop', 'fof-categories.full-page-desktop', 'boolval')
@@ -39,11 +34,14 @@ return [
         ->serializeToForum('categories.parentRemoveDescription', 'fof-categories.parent-remove-description', 'boolval')
         ->serializeToForum('categories.parentRemoveStats', 'fof-categories.parent-remove-stats', 'boolval')
         ->serializeToForum('categories.parentRemoveLastDiscussion', 'fof-categories.parent-remove-last-discussion', 'boolval')
-        ->serializeToForum('categories.childBareIcon', 'fof-categories.child-bare-icon', 'boolval', true),
-
+        ->serializeToForum('categories.childBareIcon', 'fof-categories.child-bare-icon', 'boolval', true)
+        ->serializeToForum('categories.unreadEnabled', 'fof-categories.unread-enabled', 'boolval', false)
+        ->serializeToForum('categories.unreadIconGlow', 'fof-categories.unread-icon-glow', 'boolval', false)
+        ->serializeToForum('categories.unreadTitleColor', 'fof-categories.unread-title-color', 'boolval', false)
+        ->serializeToForum('categories.unreadDot', 'fof-categories.unread-dot', 'boolval', false)
+        ->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234'),
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
-
     (new Extend\ApiSerializer(TagSerializer::class))
         ->attributes(function ($serializer, $model, $attributes) {
             $settings = resolve(SettingsRepositoryInterface::class);
@@ -55,20 +53,42 @@ return [
                 $attributes['discussionCount'] = (int) $result['discussionCount'];
                 $attributes['postCount'] = (int) $result['postCount'];
             } else {
-                // discussion count is loaded this way by default, no need to reiterate
                 $attributes['postCount'] = (int) $model->post_count;
             }
-
             return $attributes;
         }),
-
+    (new Extend\ApiSerializer(TagSerializer::class))
+        ->attribute('hasUnread', function ($serializer, $model) {
+            $actor = $serializer->getActor();
+            if ($actor->isGuest()) {
+                return false;
+            }
+            static $unreadTagIds = null;
+            if ($unreadTagIds === null) {
+                $unreadTagIds = Discussion::query()
+                    ->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
+                    ->leftJoin('discussion_user', function ($join) use ($actor) {
+                        $join->on('discussion_user.discussion_id', '=', 'discussions.id')
+                             ->where('discussion_user.user_id', '=', $actor->id);
+                    })
+                    ->whereVisibleTo($actor)
+                    ->where('discussions.last_post_number', '>', 0)
+                    ->whereNotNull('discussions.last_post_number')
+                    ->where(function ($query) {
+                        $query->whereNull('discussion_user.last_read_post_number')
+                              ->orWhereColumn('discussion_user.last_read_post_number', '<', 'discussions.last_post_number');
+                    })
+                    ->pluck('discussion_tag.tag_id')
+                    ->unique()
+                    ->toArray();
+            }
+            return in_array($model->id, $unreadTagIds);
+        }),
     (new Extend\ApiSerializer(BasicUserSerializer::class))
         ->attribute('joinTime', function ($serializer, $model) {
             return $serializer->formatDate($model->joined_at);
         }),
-
     new Extend\Locales(__DIR__.'/resources/locale'),
-
     (new Extend\Event())
         ->listen(Hidden::class, function (Hidden $event) {
             Util::updateTagsPostCount($event->post, -1);

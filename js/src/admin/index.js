@@ -59,6 +59,64 @@ app.initializers.add('fof-categories', () => {
       label: app.translator.trans('fof-categories.admin.labels.small_forum_optimized'),
       help: app.translator.trans('fof-categories.admin.help.small_forum_optimized'),
       type: 'switch',
+    })
+    .registerSetting(() => <legend class="categories-legend">{app.translator.trans('fof-categories.admin.headings.unread')}</legend>)
+    .registerSetting({
+      setting: 'fof-categories.unread-enabled',
+      label: app.translator.trans('fof-categories.admin.labels.unread_enabled'),
+      type: 'switch',
+    })
+    .registerSetting(() => {
+      if (app.data.settings['fof-categories.unread-enabled'] !== '1') return null;
+      return (
+        <div>
+          <div className="Form-group">
+            <label>{app.translator.trans('fof-categories.admin.labels.unread_icon_glow')}</label>
+            <input
+              className="FormControl"
+              type="checkbox"
+              checked={app.data.settings['fof-categories.unread-icon-glow'] === '1'}
+              onchange={(e) => { app.data.settings['fof-categories.unread-icon-glow'] = e.target.checked ? '1' : '0'; m.redraw(); }}
+            />
+          </div>
+          <div className="Form-group">
+            <label>{app.translator.trans('fof-categories.admin.labels.unread_title_color')}</label>
+            <input
+              className="FormControl"
+              type="checkbox"
+              checked={app.data.settings['fof-categories.unread-title-color'] === '1'}
+              onchange={(e) => { app.data.settings['fof-categories.unread-title-color'] = e.target.checked ? '1' : '0'; m.redraw(); }}
+            />
+          </div>
+          <div className="Form-group">
+            <label>{app.translator.trans('fof-categories.admin.labels.unread_dot')}</label>
+            <input
+              className="FormControl"
+              type="checkbox"
+              checked={app.data.settings['fof-categories.unread-dot'] === '1'}
+              onchange={(e) => { app.data.settings['fof-categories.unread-dot'] = e.target.checked ? '1' : '0'; m.redraw(); }}
+            />
+          </div>
+          <div className="Form-group">
+            <label>{app.translator.trans('fof-categories.admin.labels.unread_color')}</label>
+            <div className="ColorInput">
+              <input
+                className="FormControl"
+                placeholder="#e8a234"
+                type="text"
+                value={app.data.settings['fof-categories.unread-color'] || '#e8a234'}
+                oninput={(e) => { app.data.settings['fof-categories.unread-color'] = e.target.value; m.redraw(); }}
+              />
+              <input
+                className="ColorInput-preview"
+                type="color"
+                value={app.data.settings['fof-categories.unread-color'] || '#e8a234'}
+                oninput={(e) => { app.data.settings['fof-categories.unread-color'] = e.target.value; m.redraw(); }}
+              />
+            </div>
+          </div>
+        </div>
+      );
     });
 
   extend(BasicsPage.prototype, 'homePageItems', (items) => {
