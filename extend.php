@@ -46,8 +46,8 @@ return [
 	->serializeToForum('categories.unreadBadgeText', 'fof-categories.unread-badge-text', 'strval', 'new')
 	->serializeToForum('categories.unreadBadgeColor', 'fof-categories.unread-badge-color', 'strval', '#ff6000')
 	->registerLessConfigVar('fof-categories-unread-color', 'fof-categories.unread-color', function($value) { return $value ?: '#e8a234'; })
-	->registerLessConfigVar('fof-categories-unread-badge-color', 'fof-categories.unread-badge-color', function($value) { return $value ?: '#ff6000'; }),
-	->registerLessConfigVar('fof-categories-css-version', 'fof-categories.unread-css-version', function($value) { return $value ?: '1'; })
+	->registerLessConfigVar('fof-categories-unread-badge-color', 'fof-categories.unread-badge-color', function($value) { return $value ?: '#ff6000'; })
+	->registerLessConfigVar('fof-categories-css-version', 'fof-categories.unread-css-version', function($value) { return $value ?: '1'; }),
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
     (new Extend\ApiSerializer(TagSerializer::class))
