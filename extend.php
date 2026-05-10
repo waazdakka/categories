@@ -18,7 +18,6 @@ use Flarum\Post\Event\Restored;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
-use Flarum\Extend\Theme;
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
@@ -44,6 +43,8 @@ return [
 	->serializeToForum('categories.unreadBadge', 'fof-categories.unread-badge', function($value) { return (bool)(int)$value; })
 	->serializeToForum('categories.unreadBadgeText', 'fof-categories.unread-badge-text', 'strval', 'new')
 	->serializeToForum('categories.unreadBadgeColor', 'fof-categories.unread-badge-color', 'strval', '#ff6000'),
+	->registerLessConfigVar('fof-categories-unread-color', 'fof-categories.unread-color', function($value) { return $value ?: '#e8a234'; })
+	->registerLessConfigVar('fof-categories-unread-badge-color', 'fof-categories.unread-badge-color', function($value) { return $value ?: '#ff6000'; })
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
     (new Extend\ApiSerializer(TagSerializer::class))
@@ -103,14 +104,4 @@ return [
         ->listen(Restored::class, function (Restored $event) {
             Util::updateTagsPostCount($event->post, 1);
         }),
-(new Theme())
-    ->addCustomLessVariable('fof-categories-unread-color', function () {
-        return resolve(SettingsRepositoryInterface::class)->get('fof-categories.unread-color', '#e8a234');
-    }),
-
-(new Theme())
-    ->addCustomLessVariable('fof-categories-unread-badge-color', function () {
-        return resolve(SettingsRepositoryInterface::class)->get('fof-categories.unread-badge-color', '#ff6000');
-    }),
-
 ];
