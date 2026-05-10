@@ -18,6 +18,8 @@ use Flarum\Post\Event\Restored;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
+use Flarum\Frontend\Assets;
+use Flarum\Settings\Event\Saved;
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
@@ -104,4 +106,20 @@ return [
         ->listen(Restored::class, function (Restored $event) {
             Util::updateTagsPostCount($event->post, 1);
         }),
+(new Extend\Event())
+    ->listen(Saved::class, function (Saved $event) {
+        $unreadKeys = [
+            'fof-categories.unread-enabled',
+            'fof-categories.unread-icon-glow',
+            'fof-categories.unread-title-color',
+            'fof-categories.unread-dot',
+            'fof-categories.unread-badge',
+        ];
+        foreach ($unreadKeys as $key) {
+            if (isset($event->settings[$key])) {
+                resolve(Assets::class)->makeCss()->flush();
+                break;
+            }
+        }
+    }),
 ];
