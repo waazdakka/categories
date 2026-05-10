@@ -118,6 +118,7 @@ return [
         ];
         foreach ($unreadKeys as $key) {
             if (isset($event->settings[$key])) {
+                resolve('cache')->flush();
                 $assetsFactory = resolve('flarum.assets.factory');
                 $assets = $assetsFactory('forum');
                 $assets->makeCss()->flush();
@@ -125,6 +126,5 @@ return [
             }
         }
     }),
-
 
 ];
