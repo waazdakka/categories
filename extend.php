@@ -18,6 +18,7 @@ use Flarum\Post\Event\Restored;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
+use Flarum\Extend\Theme;
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
@@ -102,4 +103,14 @@ return [
         ->listen(Restored::class, function (Restored $event) {
             Util::updateTagsPostCount($event->post, 1);
         }),
+(new Theme())
+    ->addCustomLessVariable('fof-categories-unread-color', function () {
+        return resolve(SettingsRepositoryInterface::class)->get('fof-categories.unread-color', '#e8a234');
+    }),
+
+(new Theme())
+    ->addCustomLessVariable('fof-categories-unread-badge-color', function () {
+        return resolve(SettingsRepositoryInterface::class)->get('fof-categories.unread-badge-color', '#ff6000');
+    }),
+
 ];

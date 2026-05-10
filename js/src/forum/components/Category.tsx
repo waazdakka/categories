@@ -248,7 +248,7 @@ export default class Category extends Component<Attrs> {
   mainItems() {
     const items = new ItemList();
 
-    items.add('name', <h4 className="TagCategory-name">{this.tag.name()}</h4>, 15);
+    items.add('name', <h4 className="TagCategory-name" data-badge-text={app.forum.attribute('categories.unreadBadgeText') || 'new'}>{this.tag.name()}</h4>, 15);
 
     if (this.tag.description() && (this.isChild || !app.forum.attribute('categories.parentRemoveDescription'))) {
       items.add('description', <div className="TagCategory-description">{this.tag.description()}</div>, 10);
