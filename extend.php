@@ -40,6 +40,9 @@ return [
 	->serializeToForum('categories.unreadTitleColor', 'fof-categories.unread-title-color', function($value) { return (bool)(int)$value; })
 	->serializeToForum('categories.unreadDot', 'fof-categories.unread-dot', function($value) { return (bool)(int)$value; })
 	->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234'),
+	->serializeToForum('categories.unreadBadge', 'fof-categories.unread-badge', function($value) { return (bool)(int)$value; })
+	->serializeToForum('categories.unreadBadgeText', 'fof-categories.unread-badge-text', 'strval', 'new')
+	->serializeToForum('categories.unreadBadgeColor', 'fof-categories.unread-badge-color', 'strval', '#ff6000'),
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
     (new Extend\ApiSerializer(TagSerializer::class))

@@ -86,7 +86,24 @@ app.initializers.add('fof-categories', () => {
       setting: 'fof-categories.unread-color',
       label: app.translator.trans('fof-categories.admin.labels.unread_color'),
       type: 'color',
+    })
+    .registerSetting({
+      setting: 'fof-categories.unread-badge',
+      label: app.translator.trans('fof-categories.admin.labels.unread_badge'),
+      type: 'switch',
+    })
+    .registerSetting({
+      setting: 'fof-categories.unread-badge-text',
+      label: app.translator.trans('fof-categories.admin.labels.unread_badge_text'),
+      type: 'text',
+      placeholder: 'new',
+    })
+    .registerSetting({
+      setting: 'fof-categories.unread-badge-color',
+      label: app.translator.trans('fof-categories.admin.labels.unread_badge_color'),
+      type: 'color',
     });
+
 
   extend(BasicsPage.prototype, 'homePageItems', (items) => {
     items.add('categories', {

@@ -24,6 +24,11 @@ export default class CategoriesPage extends Page {
     // Inject unread indicator color as CSS variable
     const unreadColor = app.forum.attribute('categories.unreadColor') || '#e8a234';
     document.documentElement.style.setProperty('--fof-categories-unread-color', unreadColor);
+    
+    const badgeColor = app.forum.attribute('categories.unreadBadgeColor') || '#ff6000';
+    const badgeText = app.forum.attribute('categories.unreadBadgeText') || 'new';
+    document.documentElement.style.setProperty('--fof-categories-unread-badge-color', badgeColor);
+    document.documentElement.style.setProperty('--fof-categories-unread-badge-text', badgeText);
 
     this.tags = [];
 

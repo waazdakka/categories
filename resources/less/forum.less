@@ -764,3 +764,14 @@
   font-size: 0.5em;
   vertical-align: middle;
 }
+
+.TagCategory.hasUnread-badge > a > .TagCategory-alignStart .TagCategory-name::after {
+  content: var(--fof-categories-unread-badge-text, 'new');
+  margin-left: 5px;
+  color: #fff;
+  font-size: 65%;
+  background: var(--fof-categories-unread-badge-color, #ff6000);
+  border-radius: 4px;
+  padding: 0 4px 2px 4px;
+  vertical-align: text-top;
+}

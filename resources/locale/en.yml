@@ -17,6 +17,9 @@ fof-categories:
       unread_title_color: Colorize category title when unread?
       unread_dot: Show dot indicator when unread?
       unread_color: Unread indicator color
+      unread_badge: Show badge when unread?
+      unread_badge_text: Badge text
+      unread_badge_color: Badge color
     help:
       child_bare_icon: Should icons on child categories be displayed without a circular background?
       full_page_desktop: Should the sidebar nav menu be collapsed to a row (like on the traditional tags page)? This will also hide widgets (such as Friends of Flarum Forum Statistics) from the categories page navbar.

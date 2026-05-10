@@ -86,6 +86,7 @@ export default class Category extends Component<Attrs> {
           'hasUnread-iconGlow': tagHasUnread && !!app.forum.attribute('categories.unreadIconGlow'),
           'hasUnread-titleColor': tagHasUnread && !!app.forum.attribute('categories.unreadTitleColor'),
           'hasUnread-dot': tagHasUnread && !!app.forum.attribute('categories.unreadDot'),
+          'hasUnread-badge': tagHasUnread && !!app.forum.attribute('categories.unreadBadge'),
         })}
       >
         {this.categoryItems().toArray()}
