@@ -18,8 +18,6 @@ use Flarum\Post\Event\Restored;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Tags\Api\Controller\ListTagsController;
 use Flarum\Tags\Api\Serializer\TagSerializer;
-use Flarum\Frontend\Assets;
-use Flarum\Settings\Event\Saved;
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
@@ -37,17 +35,16 @@ return [
         ->serializeToForum('categories.parentRemoveStats', 'fof-categories.parent-remove-stats', 'boolval')
         ->serializeToForum('categories.parentRemoveLastDiscussion', 'fof-categories.parent-remove-last-discussion', 'boolval')
         ->serializeToForum('categories.childBareIcon', 'fof-categories.child-bare-icon', 'boolval', true)
-	->serializeToForum('categories.unreadEnabled', 'fof-categories.unread-enabled', function($value) { return (bool)(int)$value; })
-	->serializeToForum('categories.unreadIconGlow', 'fof-categories.unread-icon-glow', function($value) { return (bool)(int)$value; })
-	->serializeToForum('categories.unreadTitleColor', 'fof-categories.unread-title-color', function($value) { return (bool)(int)$value; })
-	->serializeToForum('categories.unreadDot', 'fof-categories.unread-dot', function($value) { return (bool)(int)$value; })
-	->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234')
-	->serializeToForum('categories.unreadBadge', 'fof-categories.unread-badge', function($value) { return (bool)(int)$value; })
-	->serializeToForum('categories.unreadBadgeText', 'fof-categories.unread-badge-text', 'strval', 'new')
-	->serializeToForum('categories.unreadBadgeColor', 'fof-categories.unread-badge-color', 'strval', '#ff6000')
-	->registerLessConfigVar('fof-categories-unread-color', 'fof-categories.unread-color', function($value) { return $value ?: '#e8a234'; })
-	->registerLessConfigVar('fof-categories-unread-badge-color', 'fof-categories.unread-badge-color', function($value) { return $value ?: '#ff6000'; })
-	->registerLessConfigVar('fof-categories-css-version', 'fof-categories.unread-css-version', function($value) { return $value ?: '1'; }),
+        ->serializeToForum('categories.unreadEnabled', 'fof-categories.unread-enabled', function($value) { return (bool)(int)$value; })
+        ->serializeToForum('categories.unreadIconGlow', 'fof-categories.unread-icon-glow', function($value) { return (bool)(int)$value; })
+        ->serializeToForum('categories.unreadTitleColor', 'fof-categories.unread-title-color', function($value) { return (bool)(int)$value; })
+        ->serializeToForum('categories.unreadDot', 'fof-categories.unread-dot', function($value) { return (bool)(int)$value; })
+        ->serializeToForum('categories.unreadColor', 'fof-categories.unread-color', 'strval', '#e8a234')
+        ->serializeToForum('categories.unreadBadge', 'fof-categories.unread-badge', function($value) { return (bool)(int)$value; })
+        ->serializeToForum('categories.unreadBadgeText', 'fof-categories.unread-badge-text', 'strval', 'new')
+        ->serializeToForum('categories.unreadBadgeColor', 'fof-categories.unread-badge-color', 'strval', '#ff6000')
+        ->registerLessConfigVar('fof-categories-unread-color', 'fof-categories.unread-color', function($value) { return $value ?: '#e8a234'; })
+        ->registerLessConfigVar('fof-categories-unread-badge-color', 'fof-categories.unread-badge-color', function($value) { return $value ?: '#ff6000'; }),
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
     (new Extend\ApiSerializer(TagSerializer::class))
@@ -107,26 +104,4 @@ return [
         ->listen(Restored::class, function (Restored $event) {
             Util::updateTagsPostCount($event->post, 1);
         }),
-
-
-(new Extend\Event())
-    ->listen(Saved::class, function (Saved $event) {
-        $unreadKeys = [
-            'fof-categories.unread-enabled',
-            'fof-categories.unread-icon-glow',
-            'fof-categories.unread-title-color',
-            'fof-categories.unread-dot',
-            'fof-categories.unread-badge',
-        ];
-        foreach ($unreadKeys as $key) {
-            if (isset($event->settings[$key])) {
-                // Force recompile by adding a dummy custom less change
-                $settings = resolve(SettingsRepositoryInterface::class);
-                $settings->set('fof-categories.unread-css-version', time());
-                break;
-            }
-        }
-    }),
-
-
 ];
