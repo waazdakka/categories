@@ -106,6 +106,7 @@ return [
         ->listen(Restored::class, function (Restored $event) {
             Util::updateTagsPostCount($event->post, 1);
         }),
+
 (new Extend\Event())
     ->listen(Saved::class, function (Saved $event) {
         $unreadKeys = [
@@ -117,9 +118,13 @@ return [
         ];
         foreach ($unreadKeys as $key) {
             if (isset($event->settings[$key])) {
-                resolve(Assets::class)->makeCss()->flush();
+                $assetsFactory = resolve('flarum.assets.factory');
+                $assets = $assetsFactory('forum');
+                $assets->makeCss()->flush();
                 break;
             }
         }
     }),
+
+
 ];
