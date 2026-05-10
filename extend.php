@@ -47,6 +47,7 @@ return [
 	->serializeToForum('categories.unreadBadgeColor', 'fof-categories.unread-badge-color', 'strval', '#ff6000')
 	->registerLessConfigVar('fof-categories-unread-color', 'fof-categories.unread-color', function($value) { return $value ?: '#e8a234'; })
 	->registerLessConfigVar('fof-categories-unread-badge-color', 'fof-categories.unread-badge-color', function($value) { return $value ?: '#ff6000'; }),
+	->registerLessConfigVar('fof-categories-css-version', 'fof-categories.unread-css-version', function($value) { return $value ?: '1'; })
     (new Extend\ApiController(ListTagsController::class))
         ->addOptionalInclude('lastPostedDiscussion.lastPostedUser'),
     (new Extend\ApiSerializer(TagSerializer::class))
@@ -107,6 +108,7 @@ return [
             Util::updateTagsPostCount($event->post, 1);
         }),
 
+
 (new Extend\Event())
     ->listen(Saved::class, function (Saved $event) {
         $unreadKeys = [
@@ -118,13 +120,13 @@ return [
         ];
         foreach ($unreadKeys as $key) {
             if (isset($event->settings[$key])) {
-                resolve('cache')->flush();
-                $assetsFactory = resolve('flarum.assets.factory');
-                $assets = $assetsFactory('forum');
-                $assets->makeCss()->flush();
+                // Force recompile by adding a dummy custom less change
+                $settings = resolve(SettingsRepositoryInterface::class);
+                $settings->set('fof-categories.unread-css-version', time());
                 break;
             }
         }
     }),
+
 
 ];
