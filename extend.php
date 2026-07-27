@@ -77,7 +77,7 @@ return [
                     if ($unreadTagIds === null) {
                         $unreadTagIds = Discussion::query()
                             ->join('discussion_tag', 'discussions.id', '=', 'discussion_tag.discussion_id')
-                            ->leftJoin('discussion_user', function ($join) use ($actor) {
+                            ->join('discussion_user', function ($join) use ($actor) {
                                 $join->on('discussion_user.discussion_id', '=', 'discussions.id')
                                      ->where('discussion_user.user_id', '=', $actor->id);
                             })
