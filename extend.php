@@ -82,6 +82,7 @@ return [
                                      ->where('discussion_user.user_id', '=', $actor->id);
                             })
                             ->whereVisibleTo($actor)
+			    ->whereNull('discussions.hidden_at')
                             ->where('discussions.last_post_number', '>', 0)
                             ->whereNotNull('discussions.last_post_number')
                             ->where(function ($query) {
